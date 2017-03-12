@@ -18,7 +18,7 @@ void decompress(std::string compressed_file, std::string decompressed_file) {
 	}
 
 	// Create a CodeExtractor to read each 12bit code from the ifstream
-	CodeTranslator *translator = new CodeTranslator(); 
+	CodeExtractor *extractor = new CodeExtractor(); 
 
 	// Create a Dictionary to map each 12-bit code to the corresponding string
 	Dictionary *dictionary = new Dictionary();
@@ -29,7 +29,7 @@ void decompress(std::string compressed_file, std::string decompressed_file) {
 	std::string next_string;
 	
 	// Loop until all the 12bit codes have been read from the ifstream
-	curr_code = translator->readCode(fin);
+	curr_code = extractor->getCode(fin);
 	while (curr_code != -1) {	
 
 		// Convert curr_code to a string and output to ofstream
@@ -37,7 +37,7 @@ void decompress(std::string compressed_file, std::string decompressed_file) {
 		fout << curr_string;
 		
 		// Read next_code and convert to string 
-		next_code = translator->readCode(fin);
+		next_code = extractor->getCode(fin);
 		if (next_code == -1) break;
 		next_string = dictionary->getString(next_code);
 		
@@ -53,9 +53,9 @@ void decompress(std::string compressed_file, std::string decompressed_file) {
 	}
 
 	delete dictionary;
-	delete translator;
+	delete extractor;
 	dictionary = NULL;
-	translator = NULL;	
+	extractor = NULL;	
 	fin.close();
 	fout.close();
 	std::cout << "Decompression complete." << std::endl;
